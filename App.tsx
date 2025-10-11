@@ -5,10 +5,8 @@
  * @format
  */
 
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
-import {
-  SafeAreaProvider,
-} from 'react-native-safe-area-context';
+import { StatusBar, StyleSheet, Text, View } from 'react-native';
+
 import { Picker } from '@react-native-picker/picker';
 import { useState } from 'react';
 
@@ -23,47 +21,65 @@ const App = () => {
   { name:"Austrolia,",
     city:['Perth','Melborn','sydini',],
   },
-]
+];
   const [country, setCountry] = useState('');
   const [city, setCity] = useState('');
 
   const handleChangeCountry = (value: any) => {
 
     setCountry(value);
+    setCity('')
   };
 
   const handleCity = (value: any) => {
-    setCountry(value);
+    setCity(value);
   };
 
+  const handleCityName=Data.find((item)=>item.name===country)
+
   return (
-    <SafeAreaProvider style={styles.container}>
-      <Text>Hello India</Text>
+    <View style={styles.container}>
+
       <StatusBar barStyle={'dark-content'} />
 
       <Picker
         selectedValue={country}
         onValueChange={(value, _index) => handleChangeCountry(value)}
+        style={{padding:10,margin:5}}
       >
         <Picker.Item label="select Country" value="select Country" />
-        <Picker.Item label="JavaScript" value="js" />
+        {
+          Data.map((item)=>{
+            return(
+      <Picker.Item label={item.name} value={item.name}/>
+            )
+          })
+        }
+  
       </Picker>
 
       <Picker
         selectedValue={city}
         onValueChange={(value, _index) => handleCity(value)}
+             style={{padding:10,margin:5}}
       >
-        <Picker.Item label="Java" value="java" />
-        <Picker.Item label="JavaScript" value="js" />
+        <Picker.Item label="Selct City" value="City" />
+
+    {
+        handleCityName&&handleCityName.city.map((item)=>{
+            return(
+      <Picker.Item label={item} value={item}/>
+            )
+          })
+        }
       </Picker>
-    </SafeAreaProvider>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor:'red'
   },
 });
 
