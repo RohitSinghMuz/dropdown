@@ -5,40 +5,65 @@
  * @format
  */
 
-import { NewAppScreen } from '@react-native/new-app-screen';
-import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
+import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
 import {
   SafeAreaProvider,
-  useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { Picker } from '@react-native-picker/picker';
+import { useState } from 'react';
 
-function App() {
-  const isDarkMode = useColorScheme() === 'dark';
+const App = () => {
+  let Data=[
+    { name:"India,",
+    city:['Mumbai','Delhi','Patna','Chennai'],
+  },
+  { name:"USA,",
+    city:['California','NewYork','Washington','Texas'],
+  },
+  { name:"Austrolia,",
+    city:['Perth','Melborn','sydini',],
+  },
+]
+  const [country, setCountry] = useState('');
+  const [city, setCity] = useState('');
+
+  const handleChangeCountry = (value: any) => {
+
+    setCountry(value);
+  };
+
+  const handleCity = (value: any) => {
+    setCountry(value);
+  };
 
   return (
-    <SafeAreaProvider>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+    <SafeAreaProvider style={styles.container}>
+      <Text>Hello India</Text>
+      <StatusBar barStyle={'dark-content'} />
+
+      <Picker
+        selectedValue={country}
+        onValueChange={(value, _index) => handleChangeCountry(value)}
+      >
+        <Picker.Item label="select Country" value="select Country" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
+
+      <Picker
+        selectedValue={city}
+        onValueChange={(value, _index) => handleCity(value)}
+      >
+        <Picker.Item label="Java" value="java" />
+        <Picker.Item label="JavaScript" value="js" />
+      </Picker>
     </SafeAreaProvider>
   );
-}
-
-function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
-    </View>
-  );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor:'red'
   },
 });
 
