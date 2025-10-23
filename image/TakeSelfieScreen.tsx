@@ -1,37 +1,15 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Alert,
-  Image,
-  Dimensions,
-  LayoutAnimation,
-} from 'react-native';
-import {
-  Camera,
-  useCameraDevices,
-  type PhotoFile,
-} from 'react-native-vision-camera';
+import React, { useEffect, useState, useRef } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, Image } from 'react-native';
+import { Camera, useCameraDevice, type PhotoFile } from 'react-native-vision-camera';
 import type { Camera as CameraType } from 'react-native-vision-camera';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const CAMERA_WIDTH = SCREEN_WIDTH * 1.2;
-const CAMERA_HEIGHT = SCREEN_WIDTH * 1.6;
-
 const TakeSelfieScreen = () => {
   const [hasPermission, setHasPermission] = useState(false);
-  const [photoUri, setPhotoUri] = useState<string | null>(null);
-  const [isCameraReady, setIsCameraReady] = useState(true);
-  const cameraRef = useRef<CameraType>(null);
+  const [photoUri, setPhotoUri] = useState<string | null>(null); 
+  const cameraRef = useRef<CameraType>(null); 
 
-  const devices = useCameraDevices();
-  const device = useMemo(
-    () => devices.find(d => d.position === 'front'),
-    [devices],
-  );
+  const device = useCameraDevice('front'); 
 
   useEffect(() => {
     (async () => {
@@ -43,12 +21,9 @@ const TakeSelfieScreen = () => {
   const takePhoto = async () => {
     if (!cameraRef.current) return;
     try {
-      const photo: PhotoFile = await cameraRef.current.takePhoto({
-        flash: 'off',
-      });
-      LayoutAnimation.easeInEaseOut();
-      setPhotoUri('file://' + photo.path);
-      setIsCameraReady(false);
+      const photo: PhotoFile = await cameraRef.current.takePhoto({ flash: 'off' });
+      setPhotoUri('file://' + photo.path); 
+      Alert.alert('Success', 'Selfie captured successfully!');
     } catch (error) {
       console.error('Photo Capture Error:', error);
       Alert.alert('Error', 'Failed to capture selfie.');
@@ -56,18 +31,15 @@ const TakeSelfieScreen = () => {
   };
 
   const retakePhoto = () => {
-    LayoutAnimation.easeInEaseOut();
     setPhotoUri(null);
-    setIsCameraReady(false);
-    setTimeout(() => setIsCameraReady(true), 300);
   };
 
   const uploadPhoto = () => {
     Alert.alert('Uploaded!', 'Your selfie has been uploaded successfully!');
-   
+    // 🔥 You can upload photoUri to server/Firebase here
   };
 
-  if (!device || !hasPermission) {
+  if (device == null || !hasPermission) {
     return (
       <View style={styles.loadingContainer}>
         <Text style={styles.loadingText}>Loading Camera...</Text>
@@ -98,12 +70,10 @@ const TakeSelfieScreen = () => {
         </View>
       </View>
 
-      {/* Camera / Preview */}
+      {/* Camera or Preview */}
       <View style={styles.cameraContainer}>
-        {photoUri ? (
-          <Image source={{ uri: photoUri }} style={styles.previewImage} />
-        ) : (
-          isCameraReady && (
+        {!photoUri ? (
+          <>
             <Camera
               ref={cameraRef}
               style={styles.camera}
@@ -111,13 +81,30 @@ const TakeSelfieScreen = () => {
               isActive={true}
               photo={true}
             />
-          )
+            <View style={styles.focusCircle} />
+            <Text style={styles.focusText}>Align your face inside the circle</Text>
+          </>
+        ) : (
+          <>
+            <Image source={{ uri: photoUri }} style={styles.previewImage} />
+            <View style={styles.focusCircle} />
+            <Text style={styles.focusText}>Preview</Text>
+          </>
         )}
       </View>
 
       {/* Bottom Buttons */}
       <View style={styles.bottomContainer}>
-        {photoUri ? (
+        {!photoUri ? (
+          <>
+            <TouchableOpacity style={styles.captureButton} onPress={takePhoto}>
+              <MaterialIcons name="camera-alt" size={30} color="#fff" />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text style={styles.skipText}>Skip</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
           <View style={styles.previewButtons}>
             <TouchableOpacity style={styles.retakeButton} onPress={retakePhoto}>
               <Text style={styles.retakeText}>Retake</Text>
@@ -126,17 +113,6 @@ const TakeSelfieScreen = () => {
               <Text style={styles.uploadText}>Continue</Text>
             </TouchableOpacity>
           </View>
-        ) : (
-          <>
-            <TouchableOpacity style={styles.captureButton} onPress={takePhoto}>
-              <MaterialIcons name="camera-alt" size={30} color="#fff" />
-            </TouchableOpacity>
-            <View style={styles.captureRow}>
-              <TouchableOpacity>
-                <Text style={styles.skipText}>Skip</Text>
-              </TouchableOpacity>
-            </View>
-          </>
         )}
       </View>
     </View>
@@ -146,7 +122,7 @@ const TakeSelfieScreen = () => {
 export default TakeSelfieScreen;
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#000', paddingVertical: 25 },
+  container: { flex: 1, backgroundColor: '#000' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -154,18 +130,12 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     backgroundColor: '#111',
   },
-  headerText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: '600',
-    marginLeft: 10,
-  },
+  headerText: { color: '#fff', fontSize: 18, fontWeight: '600', marginLeft: 10 },
   progressContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     backgroundColor: '#1c1c1c',
-    // paddingVertical: 30,
-    height: 80,
+    paddingVertical: 10,
   },
   stepCompleted: { alignItems: 'center' },
   stepActive: {
@@ -180,38 +150,50 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  camera: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    overflow: 'hidden',
+  },
+  previewImage: {
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+  },
+  focusCircle: {
+    position: 'absolute',
+    width: 310,
+    height: 310,
+    borderRadius: 155,
+    borderWidth: 2,
+    borderColor: 'white',
+  },
   focusText: {
     position: 'absolute',
-    bottom: 50,
+    bottom: 100,
     color: '#fff',
     backgroundColor: '#333',
-    paddingHorizontal: 14,
-    paddingVertical: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
     borderRadius: 10,
     fontSize: 14,
-    textAlign: 'center',
   },
-  bottomContainer: { alignItems: 'center', paddingVertical: 20 },
-  captureRow: {
-    width: '100%',
-    height: 100,
+  bottomContainer: {
+    alignItems: 'center',
+    paddingVertical: 20,
   },
   captureButton: {
-    position: 'absolute',
-    marginTop: -10,
-    width: 50,
-    height: 50,
+    width: 70,
+    height: 70,
     backgroundColor: '#00BFFF',
     borderRadius: 35,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 15,
   },
-  skipText: { color: '#ccc', fontSize: 16, paddingLeft: 320,marginTop:40 },
-  previewButtons: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: 220,
-  },
+  skipText: { color: '#ccc', fontSize: 16 },
+  previewButtons: { flexDirection: 'row', gap: 30 },
   retakeButton: {
     backgroundColor: '#555',
     paddingHorizontal: 30,
@@ -233,20 +215,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#000',
   },
   loadingText: { color: '#fff', fontSize: 16 },
-  camera: {
-    width: CAMERA_WIDTH,
-    height: CAMERA_HEIGHT,
-    borderRadius: CAMERA_WIDTH / 2,
-    overflow: 'hidden',
-  },
-  previewImage: {
-    width: CAMERA_WIDTH,
-    height: CAMERA_HEIGHT,
-    resizeMode: 'cover',
-  },
-  focusCircle: {
-    position: 'absolute',
-    width: CAMERA_WIDTH + 10,
-    height: CAMERA_HEIGHT + 10,
-  },
 });
