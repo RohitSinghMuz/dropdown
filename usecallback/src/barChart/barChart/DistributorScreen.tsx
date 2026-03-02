@@ -1,9 +1,11 @@
 import React from "react";
-import CommonBarChart, { ChartItem } from "./usecallback/src/barChart/components/CommonBarChart";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet } from "react-native";
+import CommonBarChart, {
+  ChartItem,
+} from "../components/CommonBarChart";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-const App: React.FC = () => {
+const DistributorScreen: React.FC = () => {
   const distributorData: ChartItem[] = [
     { label: "Distributor 1", value: 24 },
     { label: "Distributor 2", value: 25 },
@@ -24,6 +26,8 @@ const App: React.FC = () => {
   );
 };
 
+export default DistributorScreen;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -31,5 +35,3 @@ const styles = StyleSheet.create({
     padding: 20,
   },
 });
-export default App
-
