@@ -1,22 +1,31 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import CommonBarChart, {
+import CommonDistributorChart, {
   ChartItem,
-} from "../components/CommonBarChart";
+} from "../components/CommonDistributorChart";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 const DistributorScreen: React.FC = () => {
   const distributorData: ChartItem[] = [
-    { label: "Distributor 1", value: 24 },
-    { label: "Distributor 2", value: 25 },
-    { label: "Distributor 3", value: 33 },
-    { label: "Distributor 4", value: 36 },
-    { label: "Distributor 5", value: 40 },
+    { label: "Dist 1", value: 24 },
+    { label: "Dist 2", value: 25 },
+    { label: "Dist 3", value: 33 },
+    { label: "Dist 4", value: 36 },
+    { label: "Dist 5", value: 40 },
+    { label: "Dist 6", value: 33 },
+    { label: "Dist 7", value: 36 },
+    { label: "Dist 8", value: 40 },
+    { label: "Dist 9", value: 33 },
+    { label: "Dist 10", value: 36 },
+    { label: "Dist 11", value: 40 },
+    { label: "Dist 12", value: 33 },
+    { label: "Dist 13", value: 36 },
+    { label: "Dist 14", value: 40 },
   ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <CommonBarChart
+      <CommonDistributorChart
         title="Distributor"
         data={distributorData}
         iconText="Dist"
@@ -31,7 +40,7 @@ export default DistributorScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f5f6fa",
-    padding: 20,
+    backgroundColor: "#F5F6FA",
+    padding: 10,
   },
 });
