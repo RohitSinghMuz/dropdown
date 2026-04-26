@@ -51,7 +51,7 @@ export const CheckoutScreen: React.FC<Props> = ({ navigation }) => {
           <View style={styles.orderDetails}>
             <Text style={styles.detailLabel}>Order Total:</Text>
             <Text style={styles.detailValue}>{formatPrice(total)}</Text>
-            <Text style={styles.detailLabel} style={{ marginTop: 12 }}>
+            <Text style={[styles.detailLabel, { marginTop: 12 }]}>
               Items:
             </Text>
             <Text style={styles.detailValue}>{cartItems.length}</Text>

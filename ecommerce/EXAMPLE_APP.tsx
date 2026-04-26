@@ -1,8 +1,8 @@
 import React from 'react';
 import { Provider } from 'react-redux';
 import { NavigationContainer } from '@react-navigation/native';
-import { store } from './ecommerce/store';
-import { EcommerceNavigator } from './ecommerce/navigation/EcommerceNavigator';
+import { store } from './store';
+import { EcommerceNavigator } from './navigation/EcommerceNavigator';
 
 /**
  * Example App.tsx showing how to integrate the ecommerce module

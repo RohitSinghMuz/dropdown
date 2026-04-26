@@ -91,7 +91,7 @@ export const ProductDetailScreen: React.FC<Props> = ({ route, navigation }) => {
         />
         {product.images && product.images.length > 1 && (
           <View style={styles.thumbnailContainer}>
-            {product.images.map((img, idx) => (
+            {product.images.map((img: string, idx: number) => (
               <TouchableOpacity
                 key={idx}
                 onPress={() => setCurrentImageIndex(idx)}

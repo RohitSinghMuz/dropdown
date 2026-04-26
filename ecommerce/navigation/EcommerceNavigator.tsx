@@ -46,7 +46,7 @@ const CartBadge: React.FC = () => {
 export const EcommerceNavigator: React.FC = () => {
   return (
     <Stack.Navigator
-      screenOptions={({ navigation }) => ({
+      screenOptions={({ navigation }: { navigation: any }) => ({
         headerStyle: {
           backgroundColor: '#fff',
         },
