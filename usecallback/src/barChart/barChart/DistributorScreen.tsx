@@ -1,46 +1,103 @@
 import React from "react";
-import { StyleSheet } from "react-native";
-import CommonDistributorChart, {
-  ChartItem,
-} from "../components/CommonDistributorChart";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { View, Text, StyleSheet } from "react-native";
+import { BarChart } from "react-native-gifted-charts";
 
-const DistributorScreen: React.FC = () => {
-  const distributorData: ChartItem[] = [
-    { label: "Dist 1", value: 24 },
-    { label: "Dist 2", value: 25 },
-    { label: "Dist 3", value: 33 },
-    { label: "Dist 4", value: 36 },
-    { label: "Dist 5", value: 40 },
-    { label: "Dist 6", value: 33 },
-    { label: "Dist 7", value: 36 },
-    { label: "Dist 8", value: 40 },
-    { label: "Dist 9", value: 33 },
-    { label: "Dist 10", value: 36 },
-    { label: "Dist 11", value: 40 },
-    { label: "Dist 12", value: 33 },
-    { label: "Dist 13", value: 36 },
-    { label: "Dist 14", value: 40 },
+const DistributorChart: React.FC = () => {
+
+  const data = [
+    {
+      value: 24,
+      label: "Distributor 1",
+      frontColor: "#E53935",
+      topLabelComponent: () => (
+        <Text style={styles.redLabel}>24%</Text>
+      ),
+    },
+    {
+      value: 25,
+      label: "Distributor 2",
+      frontColor: "#E53935",
+      topLabelComponent: () => (
+        <Text style={styles.redLabel}>25%</Text>
+      ),
+    },
+    {
+      value: 33,
+      label: "Distributor 3",
+      frontColor: "#2E7D32",
+      topLabelComponent: () => (
+        <Text style={styles.greenLabel}>33%</Text>
+      ),
+    },
+    {
+      value: 36,
+      label: "Distributor 4",
+      frontColor: "#2E7D32",
+      topLabelComponent: () => (
+        <Text style={styles.greenLabel}>36%</Text>
+      ),
+    },
+    {
+      value: 40,
+      label: "Distributor 5",
+      frontColor: "#2E7D32",
+      topLabelComponent: () => (
+        <Text style={styles.greenLabel}>40%</Text>
+      ),
+    },
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <CommonDistributorChart
-        title="Distributor"
-        data={distributorData}
-        iconText="Dist"
-        lowValueThreshold={30}
+    <View style={styles.card}>
+      
+      {/* Title */}
+      <Text style={styles.title}>📦 Distributor</Text>
+
+      {/* Chart */}
+      <BarChart
+        data={data}
+        maxValue={100}
+        barWidth={32}
+        spacing={30}
+        roundedTop
+        hideRules={false}
+        yAxisThickness={0}
+        xAxisThickness={0}
+        noOfSections={5}
+        isAnimated
       />
-    </SafeAreaView>
+    </View>
   );
 };
 
-export default DistributorScreen;
+export default DistributorChart;
+
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#F5F6FA",
-    padding: 10,
+  card: {
+    backgroundColor: "#fff",
+    margin: 16,
+    padding: 16,
+    borderRadius: 14,
+    elevation: 3,
+  },
+
+  title: {
+    fontSize: 18,
+    fontWeight: "600",
+    marginBottom: 20,
+    color: "#333",
+  },
+
+  redLabel: {
+    color: "#E53935",
+    fontWeight: "600",
+    marginBottom: 6,
+  },
+
+  greenLabel: {
+    color: "#2E7D32",
+    fontWeight: "600",
+    marginBottom: 6,
   },
 });
